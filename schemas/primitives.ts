@@ -1,16 +1,20 @@
 import { z } from "zod";
 
 // auth related
-export const idSchema = z.string().min(1, "id is required");
-export const emailSchema = z.email("invalid email");
+export const idSchema = z.string().min(1, "Id is required");
+export const emailSchema = z.email("Invalid email");
 export const passwordSchema = z
   .string()
-  .min(8, "password must be at least 8 characters");
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Must have uppercase")
+  .regex(/[a-z]/, "Must have lowercase")
+  .regex(/[0-9]/, "Must have number")
+  .regex(/[^A-Za-z0-9]/, "Must have special character");
 
 // common for articles
-export const nonEmptyTextSchema = z.string().trim().min(1, "required");
-export const titleSchema = z.string().trim().min(3, "title is required");
-export const urlSchema = z.url("invalid url");
+export const nonEmptyTextSchema = z.string().trim().min(1, "Required");
+export const titleSchema = z.string().trim().min(3, "Title is required");
+export const urlSchema = z.url("Invalid URL");
 export const timestampSchema = z
   .union([z.date(), z.iso.datetime()])
   .transform((value) => (value instanceof Date ? value : new Date(value)));

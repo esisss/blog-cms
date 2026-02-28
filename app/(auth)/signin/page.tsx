@@ -3,9 +3,9 @@ import { signInAction } from "../actions/authServerActions";
 
 export default function SignInPage() {
   return (
-    <main>
-      <h1>Sign in</h1>
+    <>
+      <h2 className="card-title text-2xl font-bold mb-6">Sign in</h2>
       <SignInForm onSubmitAction={signInAction} />
-    </main>
+    </>
   );
 }

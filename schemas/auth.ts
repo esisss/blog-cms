@@ -11,8 +11,13 @@ export const registerInputSchema = z
     name: nonEmptyTextSchema,
     email: emailSchema,
     password: passwordSchema,
+    confirmPassword: passwordSchema,
   })
-  .strict();
+  .strict()
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 export const loginInputSchema = z
   .object({

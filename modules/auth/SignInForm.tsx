@@ -39,58 +39,78 @@ export function SignInForm({ onSubmitAction }: SignInFormProps) {
         setActionErrors(null);
       })}
       noValidate
+      className="w-full space-y-4"
     >
-      <div>
-        <label htmlFor="email">Email</label>
+      <div className="form-control flex flex-col">
+        <label htmlFor="email" className="label">
+          <span className="label-text">Email</span>
+        </label>
         <input
           id="email"
           type="email"
           autoComplete="email"
+          placeholder="email@example.com"
+          className="input input-bordered w-full"
           {...register("email", { required: "Email is required" })}
         />
-        {errors.email ? <p role="alert">{errors.email.message}</p> : null}
-        {actionErrors?.type === "zod" &&
-        actionErrors.data.fieldErrors.email?.length
-          ? actionErrors.data.fieldErrors.email.map((message) => (
-              <p key={message} role="alert">
-                {message}
-              </p>
-            ))
-          : null}
+        {errors.email ? (
+          <div className="label">
+            <span className="label-text-alt text-error">
+              {errors.email.message}
+            </span>
+          </div>
+        ) : actionErrors?.type === "zod" &&
+          actionErrors.data.fieldErrors.email?.length ? (
+          <div className="label">
+            <span className="label-text-alt text-error">
+              {actionErrors.data.fieldErrors.email[0]}
+            </span>
+          </div>
+        ) : null}
       </div>
 
-      <div>
-        <label htmlFor="password">Password</label>
+      <div className="form-control flex flex-col">
+        <label htmlFor="password" className="label">
+          <span className="label-text">Password</span>
+        </label>
         <input
           id="password"
           type="password"
           autoComplete="current-password"
+          placeholder="Enter your password"
+          className="input input-bordered w-full"
           {...register("password", { required: "Password is required" })}
         />
-        {errors.password ? <p role="alert">{errors.password.message}</p> : null}
-        {actionErrors?.type === "zod" &&
-        actionErrors.data.fieldErrors.password?.length
-          ? actionErrors.data.fieldErrors.password.map((message) => (
-              <p key={message} role="alert">
-                {message}
-              </p>
-            ))
-          : null}
+        {errors.password ? (
+          <div className="label">
+            <span className="label-text-alt text-error">
+              {errors.password.message}
+            </span>
+          </div>
+        ) : actionErrors?.type === "zod" &&
+          actionErrors.data.fieldErrors.password?.length ? (
+          <div className="label">
+            <span className="label-text-alt text-error">
+              {actionErrors.data.fieldErrors.password[0]}
+            </span>
+          </div>
+        ) : null}
       </div>
 
-      {actionErrors ? (
-        <div role="alert">
-          {actionErrors.type === "app" ? (
-            <p>{actionErrors.message}</p>
-          ) : actionErrors.data.formErrors.length ? (
-            actionErrors.data.formErrors.map((message) => (
-              <p key={message}>{message}</p>
-            ))
-          ) : null}
+      {actionErrors?.type === "app" ? (
+        <div role="alert" className="alert alert-error">
+          <span>{actionErrors.message}</span>
         </div>
       ) : null}
 
-      <button type="submit" disabled={isSubmitting}>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="btn btn-primary w-full"
+      >
+        {isSubmitting ? (
+          <span className="loading loading-spinner"></span>
+        ) : null}
         Sign in
       </button>
     </form>
