@@ -1,5 +1,6 @@
 "use server";
 import { APIError } from "better-auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginInputSchema, registerInputSchema } from "@/schemas";
 import { fail, fromAppError, fromZodError } from "@/server/actions/response";
@@ -65,4 +66,25 @@ export const signInAction = async (
   }
 
   redirect("/");
+};
+
+export const signOutAction = async (): Promise<ActionResponse<unknown>> => {
+  try {
+    await auth.api.signOut({
+      headers: await headers(),
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return fail("Failed to sign out", fromAppError(error.message));
+    } else if (error instanceof APIError) {
+      return fail("Failed to sign out", fromAppError(error.message));
+    } else {
+      return fail(
+        "Failed to sign out",
+        fromAppError("An unexpected error occurred during sign out."),
+      );
+    }
+  }
+
+  redirect("/signin");
 };
