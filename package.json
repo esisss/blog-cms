@@ -16,6 +16,7 @@
     "@trpc/react-query": "^11.10.0",
     "@trpc/server": "^11.10.0",
     "better-auth": "^1.4.19",
+    "lucide-react": "^0.575.0",
     "mongodb": "~7.1.0",
     "next": "16.1.6",
     "react": "19.2.3",
