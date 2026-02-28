@@ -88,3 +88,7 @@ export const signOutAction = async (): Promise<ActionResponse<unknown>> => {
 
   redirect("/signin");
 };
+
+export const signOut = async (): Promise<void> => {
+  await signOutAction();
+};

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { ActionErrors, ActionResponse, LoginInput } from "@/types";
@@ -102,7 +103,12 @@ export function SignInForm({ onSubmitAction }: SignInFormProps) {
           <span>{actionErrors.message}</span>
         </div>
       ) : null}
-
+      <p>
+        Dont have an account?{" "}
+        <Link className="underline font-bold " href="/signup">
+          Register
+        </Link>
+      </p>
       <button
         type="submit"
         disabled={isSubmitting}
