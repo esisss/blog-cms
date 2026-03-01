@@ -5,4 +5,5 @@
 
 body {
     @apply bg-base-100 text-base-content;
+    @apply max-w-screen overflow-x-hidden;
 }
