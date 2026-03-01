@@ -4,13 +4,13 @@ import Link from "next/link";
 import { signOut } from "@/server/actions/auth";
 import { auth } from "@/server/auth/auth";
 
-export async function Navbar() {
+export default async function Navbar() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
 
   return (
-    <div className="navbar bg-base-100 shadow-sm md:px-10 px-3">
+    <div className="navbar bg-base-100 shadow-sm md:px-10 px-3 ">
       <div className="flex-1">
         <Link href="/" className="btn btn-ghost text-xl text-nowrap">
           <Book className="w-6 h-6 " />
@@ -30,7 +30,7 @@ export async function Navbar() {
         <div className="hidden md:flex gap-2">
           {session ? (
             <>
-              <Link href="/post" className="btn btn-ghost">
+              <Link href="/?createPost=true" className="btn btn-ghost">
                 Create Post
               </Link>
               <form action={signOut}>
@@ -59,7 +59,7 @@ export async function Navbar() {
             {session ? (
               <>
                 <li>
-                  <Link href="/post">Create Post</Link>
+                  <Link href="/?createPost=true">Create Post</Link>
                 </li>
                 <li>
                   <form action={signOut}>
