@@ -23,6 +23,9 @@ importers:
       '@trpc/server':
         specifier: ^11.10.0
         version: 11.10.0(typescript@5.9.3)
+      '@trpc/tanstack-react-query':
+        specifier: ^11.10.0
+        version: 11.10.0(@tanstack/react-query@5.90.21(react@19.2.3))(@trpc/client@11.10.0(@trpc/server@11.10.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.10.0(typescript@5.9.3))(react@19.2.3)(typescript@5.9.3)
       better-auth:
         specifier: ^1.4.19
         version: 1.4.19(mongodb@7.1.0)(next@16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -44,6 +47,9 @@ importers:
       react-hook-form:
         specifier: ^7.71.2
         version: 7.71.2(react@19.2.3)
+      react-hot-toast:
+        specifier: ^2.6.0
+        version: 2.6.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -634,6 +640,15 @@ packages:
   '@trpc/server@11.10.0':
     resolution: {integrity: sha512-zZjTrR6He61e5TiT7e/bQqab/jRcXBZM8Fg78Yoo8uh5pz60dzzbYuONNUCOkafv5ppXVMms4NHYfNZgzw50vg==}
     peerDependencies:
+      typescript: '>=5.7.2'
+
+  '@trpc/tanstack-react-query@11.10.0':
+    resolution: {integrity: sha512-fXkkhH6UDFAFMwlXePkgbmUAiDgflpbWx4EbzRANKFzMtxyFrBjbSHQrAPrm4ZLjZdJcIeHK0oAIDPhiOh4VYg==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.80.3
+      '@trpc/client': 11.10.0
+      '@trpc/server': 11.10.0
+      react: '>=18.2.0'
       typescript: '>=5.7.2'
 
   '@tybys/wasm-util@0.10.1':
@@ -1382,6 +1397,11 @@ packages:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
 
+  goober@2.1.18:
+    resolution: {integrity: sha512-2vFqsaDVIT9Gz7N6kAL++pLpp41l3PfDuusHcjnGLfR6+huZkl6ziX+zgVC3ZxpqWhzH6pyDdGrCeDhMIvwaxw==}
+    peerDependencies:
+      csstype: ^3.0.10
+
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -1924,6 +1944,13 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-hot-toast@2.6.0:
+    resolution: {integrity: sha512-bH+2EBMZ4sdyou/DPrfgIouFpcRLCJ+HoCA32UoAYHn6T3Ur5yfcDCeSr5mwldl6pFOsiocmrXMuoCJ1vV8bWg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -2715,6 +2742,14 @@ snapshots:
 
   '@trpc/server@11.10.0(typescript@5.9.3)':
     dependencies:
+      typescript: 5.9.3
+
+  '@trpc/tanstack-react-query@11.10.0(@tanstack/react-query@5.90.21(react@19.2.3))(@trpc/client@11.10.0(@trpc/server@11.10.0(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.10.0(typescript@5.9.3))(react@19.2.3)(typescript@5.9.3)':
+    dependencies:
+      '@tanstack/react-query': 5.90.21(react@19.2.3)
+      '@trpc/client': 11.10.0(@trpc/server@11.10.0(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.10.0(typescript@5.9.3)
+      react: 19.2.3
       typescript: 5.9.3
 
   '@tybys/wasm-util@0.10.1':
@@ -3585,6 +3620,10 @@ snapshots:
       define-properties: 1.2.1
       gopd: 1.2.0
 
+  goober@2.1.18(csstype@3.2.3):
+    dependencies:
+      csstype: 3.2.3
+
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
@@ -4068,6 +4107,13 @@ snapshots:
   react-hook-form@7.71.2(react@19.2.3):
     dependencies:
       react: 19.2.3
+
+  react-hot-toast@2.6.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      csstype: 3.2.3
+      goober: 2.1.18(csstype@3.2.3)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   react-is@16.13.1: {}
 

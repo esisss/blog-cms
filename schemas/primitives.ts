@@ -13,7 +13,11 @@ export const passwordSchema = z
 
 // common for articles
 export const nonEmptyTextSchema = z.string().trim().min(1, "Required");
-export const titleSchema = z.string().trim().min(3, "Title is required");
+export const titleSchema = z
+  .string()
+  .trim()
+  .min(3, "Title is required")
+  .max(100, "Title must be less than 100 characters");
 export const urlSchema = z.url("Invalid URL");
 export const timestampSchema = z
   .union([z.date(), z.iso.datetime()])

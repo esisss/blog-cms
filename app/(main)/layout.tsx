@@ -1,4 +1,5 @@
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
+import { PostModalWrapper } from "@/components/PostModalWrapper";
 
 export default function MainLayout({
   children,
@@ -6,11 +7,12 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-base-200">
-      <Navbar />
-      <main className="flex-1 w-full max-w-2xl mx-auto p-2 sm:p-0">
-        {children}
-      </main>
+    <div className="min-h-screen flex flex-col bg-base-200 ">
+      <div className="sticky top-0 z-50">
+        <Navbar />
+      </div>
+      <main className="w-screen ">{children}</main>
+      <PostModalWrapper />
     </div>
   );
 }

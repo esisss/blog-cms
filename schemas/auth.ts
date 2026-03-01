@@ -42,4 +42,11 @@ export const authorSchema = z
   })
   .strict();
 
-export const getAuthorsSchema = z.array(authorSchema);
+export const authorWithCountSchema = authorSchema.extend({
+  articleCount: z.number().int().min(0),
+});
+
+export const getAuthorsSchema = z.array(authorWithCountSchema);
+
+export type Author = z.infer<typeof authorSchema>;
+export type AuthorWithCount = z.infer<typeof authorWithCountSchema>;

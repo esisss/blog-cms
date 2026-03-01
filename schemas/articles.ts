@@ -3,6 +3,7 @@ import {
   idSchema,
   nonEmptyTextSchema,
   paginationSchema,
+  timestampSchema,
   titleSchema,
   urlSchema,
 } from "./primitives";
@@ -38,6 +39,8 @@ export const articleSchema = z
     title: titleSchema,
     text: nonEmptyTextSchema,
     coverImageUrl: urlSchema,
+    authorId: idSchema,
+    createdAt: timestampSchema,
   })
   .strict();
 
@@ -57,3 +60,6 @@ export const getAuthorArticlesInputSchema = paginationSchema.extend({
 export const getArticleByIdInputSchema = z.object({
   id: idSchema,
 });
+
+export type Article = z.infer<typeof articleSchema>;
+export type ArticleList = z.infer<typeof articleListSchema>;
