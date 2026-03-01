@@ -1,12 +1,18 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { trpc } from "@/lib/trpc/client";
-import { fromTrpcError, fromAppError } from "@/lib/errors";
+import toast from "react-hot-toast";
+import { fromAppError, fromTrpcError } from "@/lib/errors";
+import { useTRPC } from "@/lib/trpc/client";
 import type { ActionErrors, CreateArticleInput } from "@/types";
 
 export function ArticleForm() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [actionErrors, setActionErrors] = useState<ActionErrors | null>(null);
   const {
     register,
@@ -20,21 +26,38 @@ export function ArticleForm() {
     },
   });
 
+  const createArticleMutation = useMutation(
+    trpc.articles.createArticle.mutationOptions({
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: trpc.articles.getArticles.queryKey(),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: trpc.authors.getAuthors.queryKey(),
+          }),
+        ]);
+      },
+    }),
+  );
+
   return (
     <form
       onSubmit={handleSubmit(async (values) => {
         try {
-          await trpc.articles.createArticle.mutate(values);
-          setActionErrors(null);
+          await createArticleMutation.mutateAsync(values);
+          toast.success("Article created successfully!");
+          router.push(`/`);
         } catch (error) {
           const trpcError = fromTrpcError(error);
+
           setActionErrors(
             trpcError ?? fromAppError("An unexpected error occurred"),
           );
         }
       })}
       noValidate
-      className="w-full space-y-4"
+      className="w-full space-y-4 "
     >
       <div className="form-control flex flex-col">
         <label htmlFor="title" className="label">
