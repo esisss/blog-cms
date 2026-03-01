@@ -1,5 +1,5 @@
-import { SignInForm } from "../../../modules/auth/SignInForm";
-import { signInAction } from "../actions/authServerActions";
+import { SignInForm } from "@/features/auth/SignInForm";
+import { signInAction } from "@/server/actions/auth";
 
 export default function SignInPage() {
   return (

@@ -1,10 +1,11 @@
 "use server";
+
 import { APIError } from "better-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginInputSchema, registerInputSchema } from "@/schemas";
-import { fail, fromAppError, fromZodError } from "@/server/actions/response";
 import { auth } from "@/server/auth/auth";
+import { fail, fromZodError, fromAppError } from "@/lib";
 import type { ActionResponse, LoginInput, RegisterInput } from "@/types";
 
 export const signUpAction = async (
@@ -54,9 +55,9 @@ export const signInAction = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return fail("Failed to sign up", fromAppError(error.message));
+      return fail("Failed to sign in", fromAppError(error.message));
     } else if (error instanceof APIError) {
-      return fail("Failed to sign up", fromAppError(error.message));
+      return fail("Failed to sign in", fromAppError(error.message));
     } else {
       return fail(
         "Failed to sign in",

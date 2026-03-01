@@ -1,5 +1,5 @@
-import { SignUpForm } from "../../../modules/auth/SignUpForm";
-import { signUpAction } from "../actions/authServerActions";
+import { SignUpForm } from "@/features/auth/SignUpForm";
+import { signUpAction } from "@/server/actions/auth";
 
 export default function SignUpPage() {
   return (

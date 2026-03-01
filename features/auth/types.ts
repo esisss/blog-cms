@@ -3,7 +3,7 @@ import type {
   loginInputSchema,
   registerInputSchema,
   userSessionSchema,
-} from "../../schemas/auth";
+} from "@/schemas/auth";
 
 export type LoginInput = z.infer<typeof loginInputSchema>;
 export type RegisterInput = z.infer<typeof registerInputSchema>;

@@ -33,3 +33,13 @@ export const userSessionSchema = z
     email: emailSchema,
   })
   .strict();
+
+export const authorSchema = z
+  .object({
+    id: idSchema,
+    name: nonEmptyTextSchema,
+    email: emailSchema,
+  })
+  .strict();
+
+export const getAuthorsSchema = z.array(authorSchema);

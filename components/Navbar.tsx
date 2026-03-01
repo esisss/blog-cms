@@ -1,7 +1,7 @@
 import { Book, Menu } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { signOut } from "@/app/(auth)/actions/authServerActions";
+import { signOut } from "@/server/actions/auth";
 import { auth } from "@/server/auth/auth";
 
 export async function Navbar() {
@@ -29,11 +29,16 @@ export async function Navbar() {
 
         <div className="hidden md:flex gap-2">
           {session ? (
-            <form action={signOut}>
-              <button type="submit" className="btn btn-ghost">
-                Sign out
-              </button>
-            </form>
+            <>
+              <Link href="/post" className="btn btn-ghost">
+                Create Post
+              </Link>
+              <form action={signOut}>
+                <button type="submit" className="btn btn-ghost">
+                  Sign out
+                </button>
+              </form>
+            </>
           ) : (
             <>
               <Link href="/signin" className="btn btn-ghost">
@@ -52,16 +57,21 @@ export async function Navbar() {
           </div>
           <ul className="dropdown-content menu bg-base-100 rounded-box z-50 mt-5 w-52 p-2 shadow">
             {session ? (
-              <li>
-                <form action={signOut}>
-                  <button
-                    type="submit"
-                    className="btn btn-ghost w-full justify-start"
-                  >
-                    Sign out
-                  </button>
-                </form>
-              </li>
+              <>
+                <li>
+                  <Link href="/post">Create Post</Link>
+                </li>
+                <li>
+                  <form action={signOut}>
+                    <button
+                      type="submit"
+                      className="btn btn-ghost w-full justify-start"
+                    >
+                      Sign out
+                    </button>
+                  </form>
+                </li>
+              </>
             ) : (
               <>
                 <li>
