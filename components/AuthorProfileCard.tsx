@@ -43,7 +43,7 @@ export default function AuthorProfileCard({ author }: AuthorProfileCardProps) {
           </div>
         </div>
         <h1 className="card-title text-2xl">{author.name}</h1>
-        <p className="text-base-content/70">{author.email}</p>
+        {/*<p className="text-base-content/70">{author.email}</p>*/}
         <div className="divider"></div>
         <div className="stats stats-vertical sm:stats-horizontal shadow">
           <div className="stat">
