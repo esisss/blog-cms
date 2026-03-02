@@ -1,4 +1,5 @@
 import { FileText, Type, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { SearchPreview } from "@/schemas";
 
@@ -44,9 +45,14 @@ export function SearchDropdown({ preview, query }: SearchDropdownProps) {
                 >
                   <div className="avatar placeholder">
                     <div className="bg-neutral text-neutral-content rounded-full w-8">
-                      <span className="text-xs">
-                        {author.name.charAt(0).toUpperCase()}
-                      </span>
+                      <Image
+                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          author.name,
+                        )}&background=random&size=128`}
+                        alt={author.name}
+                        width={32}
+                        height={32}
+                      />
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
