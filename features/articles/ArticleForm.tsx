@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FormAppError, FormField } from "@/components/FormField";
 import { useArticleMutations } from "@/hooks/useArticleMutations";
 import { fromAppError, fromTrpcError } from "@/lib/errors";
 import { validateImageUrl } from "@/lib/validate-image";
@@ -61,7 +62,7 @@ export function ArticleForm({
     } catch (error) {
       const trpcError = fromTrpcError(error);
       setActionErrors(
-        trpcError ?? fromAppError("An unexpected error occurred")
+        trpcError ?? fromAppError("An unexpected error occurred"),
       );
     }
   };
@@ -70,109 +71,55 @@ export function ArticleForm({
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="w-full space-y-4 "
+      className="w-full space-y-4"
     >
-      <div className="form-control flex flex-col">
-        <label htmlFor="title" className="label">
-          <span className="label-text">Title</span>
-        </label>
-        <input
-          id="title"
-          type="text"
-          placeholder="Enter article title"
-          className="input input-bordered w-full"
-          {...register("title", { required: "Title is required" })}
-        />
-        {errors.title ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {errors.title.message}
-            </span>
-          </div>
-        ) : actionErrors?.type === "zod" &&
-          actionErrors.data.fieldErrors.title?.length ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {actionErrors.data.fieldErrors.title[0]}
-            </span>
-          </div>
-        ) : null}
-      </div>
+      <FormField<CreateArticleInput>
+        name="title"
+        label="Title"
+        placeholder="Enter article title"
+        register={register}
+        error={errors.title}
+        actionErrors={actionErrors}
+        rules={{ required: "Title is required" }}
+      />
 
-      <div className="form-control flex flex-col">
-        <label htmlFor="coverImageUrl" className="label">
-          <span className="label-text">Cover Image URL</span>
-        </label>
-        <input
-          id="coverImageUrl"
-          type="url"
-          placeholder="https://example.com/image.jpg"
-          className="input input-bordered w-full"
-          {...register("coverImageUrl", {
-            required: "Cover image URL is required",
-            validate: async (value) => {
-              if (!value) return true;
-              const isValid = await validateImageUrl(value);
-              return isValid || "Please enter a valid image URL";
-            },
-          })}
-        />
-        {errors.coverImageUrl ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {errors.coverImageUrl.message}
-            </span>
-          </div>
-        ) : actionErrors?.type === "zod" &&
-          actionErrors.data.fieldErrors.coverImageUrl?.length ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {actionErrors.data.fieldErrors.coverImageUrl[0]}
-            </span>
-          </div>
-        ) : null}
-      </div>
+      <FormField<CreateArticleInput>
+        name="coverImageUrl"
+        label="Cover Image URL"
+        type="url"
+        placeholder="https://example.com/image.jpg"
+        register={register}
+        error={errors.coverImageUrl}
+        actionErrors={actionErrors}
+        rules={{
+          required: "Cover image URL is required",
+          validate: async (value) => {
+            if (!value) return true;
+            const isValid = await validateImageUrl(value);
+            return isValid || "Please enter a valid image URL";
+          },
+        }}
+      />
 
-      <div className="form-control flex flex-col">
-        <label htmlFor="text" className="label">
-          <span className="label-text">Content</span>
-        </label>
-        <textarea
-          id="text"
-          placeholder="Write your article content here..."
-          className="textarea textarea-bordered h-40 w-full"
-          {...register("text", { required: "Content is required" })}
-        />
-        {errors.text ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {errors.text.message}
-            </span>
-          </div>
-        ) : actionErrors?.type === "zod" &&
-          actionErrors.data.fieldErrors.text?.length ? (
-          <div className="label">
-            <span className="label-text-alt text-error">
-              {actionErrors.data.fieldErrors.text[0]}
-            </span>
-          </div>
-        ) : null}
-      </div>
+      <FormField<CreateArticleInput>
+        name="text"
+        label="Content"
+        as="textarea"
+        placeholder="Write your article content here..."
+        register={register}
+        error={errors.text}
+        actionErrors={actionErrors}
+        rules={{ required: "Content is required" }}
+      />
 
-      {actionErrors?.type === "app" ? (
-        <div role="alert" className="alert alert-error">
-          <span>{actionErrors.message}</span>
-        </div>
-      ) : null}
+      <FormAppError actionErrors={actionErrors} />
 
       <button
         type="submit"
         disabled={isSubmitting}
         className="btn btn-primary w-full"
       >
-        {isSubmitting ? (
-          <span className="loading loading-spinner"></span>
-        ) : null}
+        {isSubmitting && <span className="loading loading-spinner" />}
         {isEditMode ? "Update" : "Publish"}
       </button>
     </form>
