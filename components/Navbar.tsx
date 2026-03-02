@@ -13,9 +13,9 @@ export default async function Navbar() {
   return (
     <div className="navbar bg-base-100 shadow-sm md:px-10 px-3 ">
       <div className="flex-1">
-        <Link href="/" className="btn btn-ghost text-xl text-nowrap">
-          <Book className="w-6 h-6 " />
-          <span className="hidden md:inline">Blogtise</span>
+        <Link href="/" className="text-xl text-nowrap ">
+          <Book className="w-6 h-6 inline" />
+          <span className="hidden md:inline font-bold">Blogtise</span>
         </Link>
       </div>
 
@@ -27,8 +27,11 @@ export default async function Navbar() {
         <div className="hidden md:flex gap-2">
           {session ? (
             <>
+              <Link href="/profile" className="btn btn-ghost">
+                Mi perfil
+              </Link>
               <Link href="/?createPost=true" className="btn btn-ghost">
-                Create Post
+                Escribir artículo
               </Link>
               <SignOutButton />
             </>
@@ -51,8 +54,11 @@ export default async function Navbar() {
           <ul className="dropdown-content menu bg-base-100 rounded-box z-50 mt-5 w-52 p-2 shadow">
             {session ? (
               <>
+                <Link href="/profile" className="btn btn-ghost">
+                  Mi perfil
+                </Link>
                 <li>
-                  <Link href="/?createPost=true">Create Post</Link>
+                  <Link href="/?createPost=true">Escibir Artículo</Link>
                 </li>
                 <li>
                   <SignOutButton className="btn btn-ghost w-full justify-start" />
