@@ -4,6 +4,7 @@ import {
   idSchema,
   nonEmptyTextSchema,
   passwordSchema,
+  timestampSchema,
 } from "./primitives";
 
 export const registerInputSchema = z
@@ -46,7 +47,17 @@ export const authorWithCountSchema = authorSchema.extend({
   articleCount: z.number().int().min(0),
 });
 
+export const authorProfileSchema = authorSchema.extend({
+  createdAt: timestampSchema,
+  articleCount: z.number().int().min(0),
+});
+
 export const getAuthorsSchema = z.array(authorWithCountSchema);
+
+export const getAuthorByIdInputSchema = z.object({
+  id: idSchema,
+});
 
 export type Author = z.infer<typeof authorSchema>;
 export type AuthorWithCount = z.infer<typeof authorWithCountSchema>;
+export type AuthorProfile = z.infer<typeof authorProfileSchema>;

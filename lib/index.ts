@@ -1,3 +1,3 @@
 export { fromAppError, fromTrpcError, fromZodError } from "./errors";
 export { fail, ok } from "./response";
-export { trpc } from "./trpc/client";
+export { TRPCProvider, useTRPC, useTRPCClient } from "./trpc/client";
