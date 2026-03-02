@@ -88,6 +88,7 @@ blog-cms/
 
 ## Enfoque y Decisiones de Diseño
 
+
 ### Separación de responsabilidades
 
 - **`components/`**: Componentes puramente presentacionales que reciben datos via props
@@ -145,9 +146,9 @@ cp .env.example .env.local
 
 Editar `.env.local` con tus valores:
 ```env
-MONGODB_URI=mongodb://localhost:27017/blog-cms
-BETTER_AUTH_SECRET=tu-secreto-seguro
-BETTER_AUTH_URL=http://localhost:3000
+MONGODB_URI=mongodb://
+BETTER_AUTH_SECRET=secret
+
 ```
 
 4. Ejecutar en desarrollo:
