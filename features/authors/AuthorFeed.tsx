@@ -1,20 +1,25 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import Feed, { FeedSkeleton } from "@/components/Feed";
 import { useTRPC } from "@/lib/trpc/client";
+
+const PAGE_SIZE = 10;
 
 interface AuthorFeedProps {
   authorId: string;
 }
 
 export default function AuthorFeed({ authorId }: AuthorFeedProps) {
+  const [page, setPage] = useState(1);
   const trpc = useTRPC();
-  const { data, isLoading, error } = useQuery(
+
+  const { data, isLoading, error, isFetching } = useQuery(
     trpc.articles.getArticlesByAuthor.queryOptions({
       authorId,
-      page: 1,
-      pageSize: 10,
+      page,
+      pageSize: PAGE_SIZE,
     }),
   );
 
@@ -30,5 +35,16 @@ export default function AuthorFeed({ authorId }: AuthorFeedProps) {
     );
   }
 
-  return <Feed articles={data?.items ?? []} />;
+  const totalPages = data ? Math.ceil(data.total / PAGE_SIZE) : 0;
+
+  return (
+    <div className={isFetching ? "opacity-60 pointer-events-none" : ""}>
+      <Feed
+        articles={data?.items ?? []}
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
+    </div>
+  );
 }

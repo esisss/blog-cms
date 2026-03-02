@@ -2,6 +2,7 @@
 
 import type { Article } from "@/schemas";
 import ArticleCard from "./ArticleCard";
+import Pagination from "./Pagination";
 
 type SerializedArticle = Omit<Article, "createdAt"> & {
   createdAt: string | Date;
@@ -9,6 +10,9 @@ type SerializedArticle = Omit<Article, "createdAt"> & {
 
 interface FeedProps {
   articles: SerializedArticle[];
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export function FeedSkeleton() {
@@ -36,7 +40,12 @@ export function FeedSkeleton() {
   );
 }
 
-export default function Feed({ articles }: FeedProps) {
+export default function Feed({
+  articles,
+  currentPage,
+  totalPages,
+  onPageChange,
+}: FeedProps) {
   if (articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
@@ -45,11 +54,23 @@ export default function Feed({ articles }: FeedProps) {
     );
   }
 
+  const showPagination =
+    currentPage !== undefined &&
+    totalPages !== undefined &&
+    onPageChange !== undefined;
+
   return (
     <div className="flex flex-col gap-4">
       {articles.map((article) => (
         <ArticleCard key={article.id} article={article} />
       ))}
+      {showPagination && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
     </div>
   );
 }
