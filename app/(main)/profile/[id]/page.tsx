@@ -1,4 +1,4 @@
-import AuthorProfileView from "@/components/AuthorProfileView";
+import AuthorProfileView from "@/features/authors/AuthorProfileView";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
