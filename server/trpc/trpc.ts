@@ -21,6 +21,7 @@ const t = initTRPC.context<TRPCContext>().create({
 });
 
 export const router = t.router;
+export const createCallerFactory = t.createCallerFactory;
 export const publicProcedure = t.procedure;
 export const publicDbProcedure = t.procedure.use(({ ctx, next }) => {
   if (ctx.contextError || !ctx.db) {

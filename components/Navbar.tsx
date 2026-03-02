@@ -2,6 +2,7 @@ import { Book, Menu } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/server/auth/auth";
+import { SearchBar } from "./SearchBar";
 import { SignOutButton } from "./SignOutButton";
 
 export default async function Navbar() {
@@ -18,13 +19,9 @@ export default async function Navbar() {
         </Link>
       </div>
 
-      <div className="flex flex-row justify-between w-full  gap-2">
-        <div className="form-control w-full">
-          <input
-            type="text"
-            placeholder="Search"
-            className="input input-bordered sm-w-full mx-auto md:w-1/2"
-          />
+      <div className="flex flex-row justify-between w-full gap-2">
+        <div className="form-control w-full md:w-1/2 mx-auto">
+          <SearchBar />
         </div>
 
         <div className="hidden md:flex gap-2">
