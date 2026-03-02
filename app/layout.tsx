@@ -33,7 +33,22 @@ export default function RootLayout({
           containerStyle={{ zIndex: 100, top: "2rem" }}
           position="top-center"
         />
-        <Provider>{children}</Provider>
+        <Provider>
+          {children}
+          <footer className="w-full border-t border-base-200 mt-12">
+            <div className="container mx-auto px-4 py-6 text-center text-sm text-base-content/60">
+              Developed by{" "}
+              <a
+                href="https://github.com/esisss"
+                target="_blank"
+                rel="noreferrer"
+                className="link link-hover"
+              >
+                @esisss
+              </a>
+            </div>
+          </footer>
+        </Provider>
       </body>
     </html>
   );
