@@ -1,14 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/lib/trpc/client";
 import AuthorsList, { AuthorsListSkeleton } from "@/components/AuthorsList";
+import { useAuthors } from "@/hooks/useAuthorQueries";
 
 export default function AuthorsListContainer() {
-  const trpc = useTRPC();
-  const { data, isLoading, error } = useQuery(
-    trpc.authors.getAuthors.queryOptions(),
-  );
+  const { data, isLoading, error } = useAuthors();
 
   if (isLoading) {
     return <AuthorsListSkeleton />;
@@ -17,9 +13,11 @@ export default function AuthorsListContainer() {
   if (error) {
     return (
       <div className="space-y-4">
-        <h3 className="font-bold text-3xl mb-8">Authors</h3>
+        <h3 className="font-bold text-3xl mb-8">Autores</h3>
         <div className="card bg-base-100 shadow-md p-4">
-          <p className="text-error text-sm">Failed to load authors</p>
+          <p className="text-error text-sm">
+            No se pudieron cargar los autores
+          </p>
         </div>
       </div>
     );

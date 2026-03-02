@@ -1,11 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import AuthorFeed from "@/features/authors/AuthorFeed";
-import { useTRPC } from "@/lib/trpc/client";
 import AuthorProfileCard, {
   AuthorProfileCardSkeleton,
 } from "@/components/AuthorProfileCard";
+import AuthorFeed from "@/features/authors/AuthorFeed";
+import { useAuthorById } from "@/hooks/useAuthorQueries";
 
 interface AuthorProfileViewProps {
   authorId: string;
@@ -14,12 +13,7 @@ interface AuthorProfileViewProps {
 export default function AuthorProfileView({
   authorId,
 }: AuthorProfileViewProps) {
-  const trpc = useTRPC();
-  const {
-    data: author,
-    isLoading,
-    error,
-  } = useQuery(trpc.authors.getAuthorById.queryOptions({ id: authorId }));
+  const { data: author, isLoading, error } = useAuthorById(authorId);
 
   if (isLoading) {
     return (
@@ -45,7 +39,7 @@ export default function AuthorProfileView({
     <div className="space-y-8">
       <AuthorProfileCard author={author} />
       <div>
-        <h2 className="text-2xl font-bold mb-6">Articles by {author.name}</h2>
+        <h2 className="text-2xl font-bold mb-6">Artículos de {author.name}</h2>
         <AuthorFeed authorId={authorId} />
       </div>
     </div>

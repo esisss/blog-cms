@@ -22,7 +22,9 @@ export default function AuthorProfileCard({ author }: AuthorProfileCardProps) {
       <div className="card-body items-center text-center">
         <div className="avatar placeholder mb-4">
           <div className="bg-neutral text-neutral-content rounded-full w-24">
-            <span className="text-3xl">{author.name.charAt(0).toUpperCase()}</span>
+            <span className="text-3xl">
+              {author.name.charAt(0).toUpperCase()}
+            </span>
           </div>
         </div>
         <h1 className="card-title text-2xl">{author.name}</h1>
@@ -30,7 +32,7 @@ export default function AuthorProfileCard({ author }: AuthorProfileCardProps) {
         <div className="divider"></div>
         <div className="stats stats-vertical sm:stats-horizontal shadow">
           <div className="stat">
-            <div className="stat-title">Articles</div>
+            <div className="stat-title">Artículos</div>
             <div className="stat-value text-primary">{author.articleCount}</div>
           </div>
           <div className="stat">

@@ -15,7 +15,7 @@ interface AuthorsListProps {
 export function AuthorsListSkeleton() {
   return (
     <div className="space-y-4">
-      <h1 className="font-bold text-3xl mb-8">Authors</h1>
+      <h1 className="font-bold text-3xl mb-8">Autores</h1>
       <div className="card bg-base-100 shadow-md p-6">
         <div className="space-y-3">
           {[...Array(10)].map((_, i) => (
@@ -37,9 +37,9 @@ export default function AuthorsList({ authors }: AuthorsListProps) {
   if (authors.length === 0) {
     return (
       <div className="space-y-4">
-        <h3 className="font-bold text-3xl mb-8">Authors</h3>
+        <h3 className="font-bold text-3xl mb-8">Autores</h3>
         <div className="card bg-base-100 shadow-md p-4">
-          <p className="text-base-content/50 text-sm">No authors yet</p>
+          <p className="text-base-content/50 text-sm">Aun no hay autores</p>
         </div>
       </div>
     );
@@ -47,7 +47,7 @@ export default function AuthorsList({ authors }: AuthorsListProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="font-bold text-3xl mb-8">Authors</h3>
+      <h3 className="font-bold text-3xl mb-8">Autores</h3>
       <div className="card bg-base-100 shadow-md p-4">
         <ul className="space-y-3">
           {authors.map((author) => (

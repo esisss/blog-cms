@@ -1,9 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useArticlesByAuthor } from "@/hooks/useAuthorQueries";
 import Feed, { FeedSkeleton } from "@/components/Feed";
-import { useTRPC } from "@/lib/trpc/client";
 
 const PAGE_SIZE = 10;
 
@@ -13,15 +12,7 @@ interface AuthorFeedProps {
 
 export default function AuthorFeed({ authorId }: AuthorFeedProps) {
   const [page, setPage] = useState(1);
-  const trpc = useTRPC();
-
-  const { data, isLoading, error, isFetching } = useQuery(
-    trpc.articles.getArticlesByAuthor.queryOptions({
-      authorId,
-      page,
-      pageSize: PAGE_SIZE,
-    }),
-  );
+  const { data, isLoading, error, isFetching } = useArticlesByAuthor(authorId, page, PAGE_SIZE);
 
   if (isLoading) {
     return <FeedSkeleton />;
