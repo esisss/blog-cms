@@ -1,8 +1,8 @@
 import { Book, Menu } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { signOut } from "@/server/actions/auth";
 import { auth } from "@/server/auth/auth";
+import { SignOutButton } from "./SignOutButton";
 
 export default async function Navbar() {
   const session = await auth.api.getSession({
@@ -33,11 +33,7 @@ export default async function Navbar() {
               <Link href="/?createPost=true" className="btn btn-ghost">
                 Create Post
               </Link>
-              <form action={signOut}>
-                <button type="submit" className="btn btn-ghost">
-                  Sign out
-                </button>
-              </form>
+              <SignOutButton />
             </>
           ) : (
             <>
@@ -62,14 +58,7 @@ export default async function Navbar() {
                   <Link href="/?createPost=true">Create Post</Link>
                 </li>
                 <li>
-                  <form action={signOut}>
-                    <button
-                      type="submit"
-                      className="btn btn-ghost w-full justify-start"
-                    >
-                      Sign out
-                    </button>
-                  </form>
+                  <SignOutButton className="btn btn-ghost w-full justify-start" />
                 </li>
               </>
             ) : (
