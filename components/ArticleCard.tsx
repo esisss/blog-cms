@@ -78,7 +78,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
               </div>
             )}
             <span className="text-sm text-base-content/50">
-              - {formattedDate}
+              {formattedDate}
             </span>
           </div>
         </div>
@@ -86,8 +86,8 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           <p className="text-base-content/70 line-clamp-3 wrap-break-words">
             {article.text}
           </p>
-          <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-base-100 via-base-100/90 to-transparent h-24 flex items-end justify-center pb-2">
-            <span className="font-bold text-secondary ">Leer Articulo</span>
+          <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-base-100 via-base-100/90 to-transparent h-24 flex items-end justify-end pb-2">
+            <span className="font-bold text-secondary mx-5">Leer Articulo</span>
           </div>
         </Link>
       </div>
