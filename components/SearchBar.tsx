@@ -19,16 +19,13 @@ export function SearchBar() {
 
   // Fetch preview using server action when query changes
   useEffect(() => {
-    if (debouncedQuery.length >= 1) {
-      startTransition(async () => {
-        const result = await searchPreviewAction(debouncedQuery);
-        setPreview(result);
-        setIsOpen(true);
-      });
-    } else {
-      setPreview(null);
-      setIsOpen(false);
-    }
+    if (debouncedQuery.length < 1) return;
+
+    startTransition(async () => {
+      const result = await searchPreviewAction(debouncedQuery);
+      setPreview(result);
+      setIsOpen(true);
+    });
   }, [debouncedQuery]);
 
   // Close dropdown on outside click
@@ -76,7 +73,14 @@ export function SearchBar() {
             type="text"
             placeholder="Search articles, authors..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setQuery(value);
+              if (value.length < 1) {
+                setPreview(null);
+                setIsOpen(false);
+              }
+            }}
             onFocus={() => query.length >= 1 && preview && setIsOpen(true)}
             className="input input-bordered w-full pl-10 pr-10"
           />
