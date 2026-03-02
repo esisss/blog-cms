@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Feed from "@/components/Feed";
 import Pagination from "@/components/Pagination";
