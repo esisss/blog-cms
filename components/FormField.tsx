@@ -1,6 +1,12 @@
 "use client";
 
-import type { FieldError, FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
+import type {
+  FieldError,
+  FieldValues,
+  Path,
+  RegisterOptions,
+  UseFormRegister,
+} from "react-hook-form";
 import type { ActionErrors } from "@/types";
 
 type InputType = "text" | "email" | "password" | "url";
@@ -31,21 +37,25 @@ interface InputFieldProps<T extends FieldValues> extends FormFieldBaseProps<T> {
   type?: InputType;
 }
 
-interface TextareaFieldProps<T extends FieldValues> extends FormFieldBaseProps<T> {
+interface TextareaFieldProps<
+  T extends FieldValues,
+> extends FormFieldBaseProps<T> {
   /** Render as textarea */
   as: "textarea";
   /** Textarea rows */
   rows?: number;
 }
 
-type FormFieldProps<T extends FieldValues> = InputFieldProps<T> | TextareaFieldProps<T>;
+type FormFieldProps<T extends FieldValues> =
+  | InputFieldProps<T>
+  | TextareaFieldProps<T>;
 
 /**
  * Helper to extract field error message from actionErrors
  */
 function getActionFieldError(
   actionErrors: ActionErrors | null | undefined,
-  fieldName: string
+  fieldName: string,
 ): string | undefined {
   if (!actionErrors || actionErrors.type !== "zod") return undefined;
   const fieldErrors = actionErrors.data.fieldErrors[fieldName];
@@ -73,9 +83,10 @@ export function FormField<T extends FieldValues>(props: FormFieldProps<T>) {
   const actionFieldError = getActionFieldError(actionErrors, name);
   const errorMessage = error?.message ?? actionFieldError;
 
-  const inputClasses = props.as === "textarea"
-    ? "textarea textarea-bordered w-full"
-    : "input input-bordered w-full";
+  const inputClasses =
+    props.as === "textarea"
+      ? "textarea textarea-bordered w-full"
+      : "input input-bordered w-full";
 
   return (
     <div className="form-control flex flex-col">
@@ -114,7 +125,11 @@ export function FormField<T extends FieldValues>(props: FormFieldProps<T>) {
 /**
  * Displays app-level errors (non-field-specific)
  */
-export function FormAppError({ actionErrors }: { actionErrors?: ActionErrors | null }) {
+export function FormAppError({
+  actionErrors,
+}: {
+  actionErrors?: ActionErrors | null;
+}) {
   if (!actionErrors || actionErrors.type !== "app") return null;
 
   return (
