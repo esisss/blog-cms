@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface Author {
@@ -56,18 +57,23 @@ export default function AuthorsList({ authors }: AuthorsListProps) {
                 className="flex items-center justify-between hover:bg-base-200 p-2 rounded-lg transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="avatar placeholder">
-                    <div className="bg-neutral text-neutral-content rounded-full w-10">
-                      <span className="text-sm">
-                        {author.name.charAt(0).toUpperCase()}
-                      </span>
+                  <div className="avatar">
+                    <div className="w-10 rounded-full">
+                      <Image
+                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          author.name,
+                        )}&background=random&size=128`}
+                        alt={author.name}
+                        width={40}
+                        height={40}
+                      />
                     </div>
                   </div>
                   <span className="font-medium">{author.name}</span>
                 </div>
-                <div className="badge badge-ghost">
+                <div className="badge badge-ghost w-fit text-nowrap">
                   {author.articleCount}{" "}
-                  {author.articleCount === 1 ? "article" : "articles"}
+                  {author.articleCount === 1 ? "articulo" : "artículos"}
                 </div>
               </Link>
             </li>
