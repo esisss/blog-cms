@@ -16,13 +16,18 @@ export default function ArticlePage() {
   const searchParams = useSearchParams();
   const id = params.id ?? "";
   const isEditMode = searchParams.get("edit") === "true";
-  
+
   const trpc = useTRPC();
   const { data: session } = useSession();
 
   const { data, isLoading, error } = useQuery({
     ...trpc.articles.getArticleById.queryOptions({ id }),
     enabled: id.length > 0,
+  });
+
+  const { data: author } = useQuery({
+    ...trpc.authors.getAuthorById.queryOptions({ id: data?.authorId ?? "" }),
+    enabled: !!data?.authorId,
   });
 
   if (isLoading) {
@@ -38,7 +43,7 @@ export default function ArticlePage() {
 
   return (
     <>
-      <ArticlePageContent article={data} />
+      <ArticlePageContent article={data} author={author} />
       {showEditModal && (
         <EditArticleModal
           article={{

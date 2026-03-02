@@ -16,17 +16,28 @@ interface Article {
   authorId: string;
 }
 
-export function ArticlePageContent({ article }: { article: Article }) {
+interface Author {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export function ArticlePageContent({
+  article,
+  author,
+}: {
+  article: Article;
+  author?: Author;
+}) {
   const { data: session } = useSession();
   const isOwner = session?.user?.id === article.authorId;
   const { showConfirm, setShowConfirm, handleDelete, isDeleting } =
     useDeleteArticle({ articleId: article.id });
 
-  const authorPlaceholder = {
-    name: "Autor desconocido",
-    avatarUrl:
-      "https://ui-avatars.com/api/?name=Autor+Desconocido&background=random&size=128",
-  };
+  const authorName = author?.name ?? "Autor desconocido";
+  const authorImage = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    authorName,
+  )}&background=random&size=128`;
 
   return (
     <article className="w-full max-w-3xl mx-auto px-4 md:px-0 ">
@@ -66,19 +77,22 @@ export function ArticlePageContent({ article }: { article: Article }) {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <Link
+          href={`/profile/${article.authorId}`}
+          className="flex items-center gap-4 hover:opacity-80 transition-opacity"
+        >
           <div className="avatar">
             <div className="w-12 rounded-full">
               <Image
-                src={authorPlaceholder.avatarUrl}
-                alt={authorPlaceholder.name}
+                src={authorImage}
+                alt={authorName}
                 width={48}
                 height={48}
               />
             </div>
           </div>
           <div>
-            <p className="font-medium">{authorPlaceholder.name}</p>
+            <p className="font-medium">{authorName}</p>
             <p className="text-sm text-base-content/60">
               {new Date(article.createdAt).toLocaleDateString("es-ES", {
                 year: "numeric",
@@ -87,7 +101,7 @@ export function ArticlePageContent({ article }: { article: Article }) {
               })}
             </p>
           </div>
-        </div>
+        </Link>
       </header>
 
       <div className="prose prose-base md:prose-lg max-w-none">
