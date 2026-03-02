@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import { AuthCacheSync } from "@/components/AuthCacheSync";
 import { Provider } from "@/lib/trpc/trpc-provider";
 
 const geistSans = Geist({
@@ -35,7 +34,6 @@ export default function RootLayout({
           position="top-center"
         />
         <Provider>
-          <AuthCacheSync />
           {children}
           <footer className="w-full border-t border-base-200 mt-12">
             <div className="container mx-auto px-4 py-6 text-center text-sm text-base-content/60">

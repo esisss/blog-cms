@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { signIn } from "@/lib/auth-client";
 import { FormField, FormAppError } from "@/components/FormField";
-import type { ActionErrors, ActionResponse, LoginInput } from "@/types";
+import type { ActionErrors, LoginInput } from "@/types";
 
-type SignInFormProps = {
-  onSubmitAction?: (values: LoginInput) => Promise<ActionResponse<unknown>>;
-};
-
-export function SignInForm({ onSubmitAction }: SignInFormProps) {
+export function SignInForm() {
+  const router = useRouter();
   const [actionErrors, setActionErrors] = useState<ActionErrors | null>(null);
   const {
     register,
@@ -24,19 +23,22 @@ export function SignInForm({ onSubmitAction }: SignInFormProps) {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    const submit = await onSubmitAction?.(values);
+    const { error } = await signIn.email({
+      email: values.email,
+      password: values.password,
+    });
 
-    if (submit && !submit.success) {
-      setActionErrors(
-        submit.errors ?? {
-          type: "app",
-          message: submit.message ?? "An error occurred",
-        }
-      );
+    if (error) {
+      setActionErrors({
+        type: "app",
+        message: error.message ?? "An error occurred",
+      });
       return;
     }
 
     setActionErrors(null);
+    router.push("/");
+    router.refresh();
   };
 
   return (
