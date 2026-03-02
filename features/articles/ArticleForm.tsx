@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { fromAppError, fromTrpcError } from "@/lib/errors";
 import { useTRPC } from "@/lib/trpc/client";
+import { validateImageUrl } from "@/lib/validate-image";
 import type { ActionErrors, CreateArticleInput } from "@/types";
 
 interface ArticleFormProps {
@@ -20,7 +21,11 @@ interface ArticleFormProps {
   onSuccess?: () => void;
 }
 
-export function ArticleForm({ mode = "create", article, onSuccess }: ArticleFormProps) {
+export function ArticleForm({
+  mode = "create",
+  article,
+  onSuccess,
+}: ArticleFormProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -63,7 +68,9 @@ export function ArticleForm({ mode = "create", article, onSuccess }: ArticleForm
             queryKey: trpc.articles.getArticles.queryKey(),
           }),
           queryClient.invalidateQueries({
-            queryKey: trpc.articles.getArticleById.queryKey({ id: article?.id ?? "" }),
+            queryKey: trpc.articles.getArticleById.queryKey({
+              id: article?.id ?? "",
+            }),
           }),
           queryClient.invalidateQueries({
             queryKey: trpc.articles.getArticlesByAuthor.queryKey(),
@@ -85,7 +92,7 @@ export function ArticleForm({ mode = "create", article, onSuccess }: ArticleForm
         await createArticleMutation.mutateAsync(values);
         toast.success("Article created successfully!");
       }
-      
+
       if (onSuccess) {
         onSuccess();
       } else {
@@ -143,6 +150,11 @@ export function ArticleForm({ mode = "create", article, onSuccess }: ArticleForm
           className="input input-bordered w-full"
           {...register("coverImageUrl", {
             required: "Cover image URL is required",
+            validate: async (value) => {
+              if (!value) return true;
+              const isValid = await validateImageUrl(value);
+              return isValid || "Please enter a valid image URL";
+            },
           })}
         />
         {errors.coverImageUrl ? (
