@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blog CMS
 
-## Getting Started
+Sistema de gestión de contenido para blogs construido con Next.js 16, tRPC, MongoDB y better-auth.
 
-First, run the development server:
+## Stack Tecnológico
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework**: Next.js 16 (App Router)
+- **Backend API**: tRPC v11 con TanStack Query
+- **Base de datos**: MongoDB
+- **Autenticación**: better-auth
+- **Validación**: Zod v4
+- **Formularios**: react-hook-form
+- **Estilos**: Tailwind CSS v4 + DaisyUI v5
+- **Iconos**: Lucide React
+
+## Funcionalidades
+
+- CRUD completo de artículos
+- Sistema de autores con perfiles públicos
+- Feed de artículos con paginación
+- Búsqueda server-side con preview en tiempo real
+- Autenticación (registro/login)
+- Modales controlados por query params (`?createPost=true`, `?edit=true`)
+
+## Arquitectura y Organización
+
+```
+blog-cms/
+├── app/                      # Next.js App Router
+│   ├── (auth)/               # Route group: páginas de autenticación
+│   │   ├── signin/
+│   │   └── signup/
+│   ├── (main)/               # Route group: páginas principales
+│   │   ├── article/[id]/     # Detalle de artículo
+│   │   ├── profile/[id]/     # Perfil de autor
+│   │   ├── search/           # Resultados de búsqueda
+│   │   └── page.tsx          # Home (feed)
+│   └── api/                  # API routes (tRPC, auth)
+│
+├── components/               # Componentes presentacionales reutilizables
+│   ├── ArticleCard.tsx       # Card de artículo
+│   ├── AuthorProfileCard.tsx # Card de perfil
+│   ├── Feed.tsx              # Grid de artículos
+│   ├── FormField.tsx         # Campo de formulario genérico
+│   ├── Pagination.tsx        # Paginación (callback/URL modes)
+│   ├── SearchBar.tsx         # Barra de búsqueda con preview
+│   └── ...
+│
+├── features/                 # Componentes con lógica de dominio
+│   ├── articles/             # Formularios, modales, feeds de artículos
+│   ├── auth/                 # Formularios de signin/signup
+│   ├── authors/              # Vistas de autor, feed de autor
+│   └── search/               # Resultados de búsqueda
+│
+├── hooks/                    # Custom hooks centralizados
+│   ├── useArticleMutations.ts  # CRUD mutations con cache invalidation
+│   ├── useAuthorQueries.ts     # Queries de autores
+│   ├── useDebounce.ts          # Debounce para búsqueda
+│   └── useDeleteArticle.ts     # Delete con confirmación
+│
+├── schemas/                  # Schemas Zod para validación
+│   ├── articles.ts           # Schemas de artículos
+│   ├── auth.ts               # Schemas de autenticación
+│   ├── search.ts             # Schemas de búsqueda
+│   └── primitives.ts         # Tipos primitivos reutilizables
+│
+├── server/                   # Código del servidor
+│   ├── actions/              # Server Actions
+│   ├── auth/                 # Configuración better-auth
+│   ├── db/                   # Conexión MongoDB
+│   ├── handlers/             # Handlers de negocio
+│   └── trpc/                 # Configuración tRPC
+│       ├── routers/          # Routers (articles, authors, search)
+│       ├── context.ts        # Contexto de request
+│       ├── trpc.ts           # Procedures (public/protected)
+│       └── index.ts          # Root router + getServerCaller
+│
+├── lib/                      # Utilidades compartidas
+│   ├── auth-client.ts        # Cliente better-auth
+│   ├── errors.ts             # Manejo de errores
+│   ├── trpc/                 # Cliente tRPC
+│   └── response.ts           # Helpers de respuesta
+│
+└── types/                    # Tipos TypeScript globales
+    ├── errors.ts             # Tipos de error (ActionErrors)
+    └── index.ts              # Exports centralizados
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Enfoque y Decisiones de Diseño
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Separación de responsabilidades
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **`components/`**: Componentes puramente presentacionales que reciben datos via props
+- **`features/`**: Componentes "container" con lógica de negocio y data fetching
+- **`hooks/`**: Lógica reutilizable centralizada (mutations, queries)
 
-## Learn More
+### tRPC + TanStack Query
 
-To learn more about Next.js, take a look at the following resources:
+- Procedures protegidas para operaciones autenticadas
+- `createCallerFactory` para llamar procedures desde Server Components/Actions sin overhead HTTP
+- Cache invalidation automática en mutations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Validación con Zod
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Schemas compartidos entre cliente y servidor
+- Discriminated unions para tipado fuerte (ej: `ActionErrors`)
 
-## Deploy on Vercel
+### UI Patterns
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Modales controlados por query params para URLs compartibles
+- Componente `Pagination` con dos modos:
+  - **Callback mode**: estado local (`onPageChange`)
+  - **URL mode**: navegación server-side (`buildUrl`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Formularios
+
+- `FormField` genérico que soporta react-hook-form + server action errors
+- Reducción significativa de código repetitivo (~40% menos)
+
+## Instalación
+
+### Prerrequisitos
+
+- Node.js 18+
+- pnpm
+- MongoDB (local o Atlas)
+
+### Pasos
+
+1. Clonar el repositorio:
+```bash
+git clone <repository-url>
+cd blog-cms
+```
+
+2. Instalar dependencias:
+```bash
+pnpm install
+```
+
+3. Configurar variables de entorno:
+```bash
+cp .env.example .env.local
+```
+
+Editar `.env.local` con tus valores:
+```env
+MONGODB_URI=mongodb://localhost:27017/blog-cms
+BETTER_AUTH_SECRET=tu-secreto-seguro
+BETTER_AUTH_URL=http://localhost:3000
+```
+
+4. Ejecutar en desarrollo:
+```bash
+pnpm dev
+```
+
+5. Abrir [http://localhost:3000](http://localhost:3000)
+
+### Scripts disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `pnpm dev` | Servidor de desarrollo |
+| `pnpm build` | Build de producción |
+| `pnpm start` | Iniciar build de producción |
+| `pnpm lint` | Ejecutar ESLint |
+| `pnpm typecheck` | Verificar tipos TypeScript |
+
+---
+
+## Uso de Inteligencia Artificial
+
+Este proyecto fue desarrollado con asistencia de **Claude Opus 4.5** (vía OpenCode CLI) y **Codex 5.2** como herramientas de pair programming para acelerar la implementación, refactoring y debugging.
