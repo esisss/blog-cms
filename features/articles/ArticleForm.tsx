@@ -1,12 +1,11 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useArticleMutations } from "@/hooks/useArticleMutations";
 import { fromAppError, fromTrpcError } from "@/lib/errors";
-import { useTRPC } from "@/lib/trpc/client";
 import { validateImageUrl } from "@/lib/validate-image";
 import type { ActionErrors, CreateArticleInput } from "@/types";
 
@@ -26,10 +25,9 @@ export function ArticleForm({
   article,
   onSuccess,
 }: ArticleFormProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
   const router = useRouter();
   const [actionErrors, setActionErrors] = useState<ActionErrors | null>(null);
+  const { createArticle, updateArticle } = useArticleMutations();
 
   const isEditMode = mode === "edit" && article;
 
@@ -45,51 +43,13 @@ export function ArticleForm({
     },
   });
 
-  const createArticleMutation = useMutation(
-    trpc.articles.createArticle.mutationOptions({
-      onSuccess: async () => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: trpc.articles.getArticles.queryKey(),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: trpc.authors.getAuthors.queryKey(),
-          }),
-        ]);
-      },
-    }),
-  );
-
-  const updateArticleMutation = useMutation(
-    trpc.articles.updateArticle.mutationOptions({
-      onSuccess: async () => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: trpc.articles.getArticles.queryKey(),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: trpc.articles.getArticleById.queryKey({
-              id: article?.id ?? "",
-            }),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: trpc.articles.getArticlesByAuthor.queryKey(),
-          }),
-        ]);
-      },
-    }),
-  );
-
   const onSubmit = async (values: CreateArticleInput) => {
     try {
       if (isEditMode) {
-        await updateArticleMutation.mutateAsync({
-          id: article.id,
-          ...values,
-        });
+        await updateArticle.mutateAsync({ id: article.id, ...values });
         toast.success("Article updated successfully!");
       } else {
-        await createArticleMutation.mutateAsync(values);
+        await createArticle.mutateAsync(values);
         toast.success("Article created successfully!");
       }
 
@@ -101,7 +61,7 @@ export function ArticleForm({
     } catch (error) {
       const trpcError = fromTrpcError(error);
       setActionErrors(
-        trpcError ?? fromAppError("An unexpected error occurred"),
+        trpcError ?? fromAppError("An unexpected error occurred")
       );
     }
   };
