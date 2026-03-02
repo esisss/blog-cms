@@ -1,11 +1,11 @@
 "use client";
 
-import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDeleteArticle } from "@/hooks/useDeleteArticle";
 import { useSession } from "@/lib/auth-client";
 import type { Article } from "@/schemas";
+import ArticleCardActions from "./ArticleCardActions";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
 
 type SerializedArticle = Omit<Article, "createdAt"> & {
@@ -42,44 +42,19 @@ export default function ArticleCard({ article }: ArticleCardProps) {
           className="w-full h-full object-cover"
         />
       </figure>
-      <div className="card-body relative">
-        <div className="flex flex-row justify-between">
+      <div className="card-body px-3 relative">
+        <div className="flex flex-row justify-between gap-3">
           <h2 className="card-title line-clamp-2">{article.title}</h2>
-          <div className="flex items-center  gap-2">
-            {isOwner && (
-              <div className="flex  items-end gap-1">
-                <Link
-                  href={`/article/${article.id}?edit=true`}
-                  className="inline-flex items-center"
-                >
-                  <button
-                    type="button"
-                    className="inline-flex items-center text-xs text-secondary-content hover:font-bold gap-1 cursor-pointer"
-                  >
-                    <Pencil
-                      size={14}
-                      className="inline -translate-y-0.5 mx-1"
-                    />
-                    Editar
-                  </button>
-                </Link>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setShowConfirm(true);
-                  }}
-                  className="inline-flex items-center text-xs text-error hover:font-bold gap-1 cursor-pointer"
-                >
-                  <Trash2 size={14} className="inline -translate-y-0.5 mx-1" />
-                  Eliminar
-                </button>
-              </div>
-            )}
+          <div className="flex items-center gap-2">
             <span className="text-sm text-base-content/50">
               {formattedDate}
             </span>
+            {isOwner && (
+              <ArticleCardActions
+                articleId={article.id}
+                onDelete={() => setShowConfirm(true)}
+              />
+            )}
           </div>
         </div>
         <Link href={`/article/${article.id}`}>
