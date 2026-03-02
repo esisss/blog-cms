@@ -54,11 +54,19 @@ export default async function Navbar() {
           <ul className="dropdown-content menu bg-base-100 rounded-box z-50 mt-5 w-52 p-2 shadow">
             {session ? (
               <>
-                <Link href="/profile" className="btn btn-ghost">
+                <Link
+                  href="/profile"
+                  className="btn btn-ghost w-full justify-start"
+                >
                   Mi perfil
                 </Link>
                 <li>
-                  <Link href="/?createPost=true">Escibir Artículo</Link>
+                  <Link
+                    href="/?createPost=true"
+                    className="btn btn-ghost w-full justify-start"
+                  >
+                    Escibir Artículo
+                  </Link>
                 </li>
                 <li>
                   <SignOutButton className="btn btn-ghost w-full justify-start" />
