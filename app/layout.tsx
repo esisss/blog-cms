@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster
-          containerStyle={{ zIndex: 5, top: "2rem" }}
+          containerStyle={{ zIndex: 100, top: "2rem" }}
           position="top-center"
         />
         <Provider>{children}</Provider>

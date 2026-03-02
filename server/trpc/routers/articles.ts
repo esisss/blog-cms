@@ -159,4 +159,23 @@ export const articlesRouter = router({
         throw new Error("Failed to update article", { cause: error });
       }
     }),
+
+  deleteArticle: protectedProcedure
+    .input(getArticleByIdInputSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const result = await ctx.db.collection("articles").deleteOne({
+          _id: new ObjectId(input.id),
+          authorId: ctx.session.user.id,
+        });
+
+        if (result.deletedCount === 0) {
+          throw new Error("Article not found or unauthorized");
+        }
+
+        return { success: true };
+      } catch (error) {
+        throw new Error("Failed to delete article", { cause: error });
+      }
+    }),
 });

@@ -1,4 +1,4 @@
-import AuthorsList from "@/components/AuthorsList";
+import AuthorsListContainer from "@/features/authors/AuthorsListContainer";
 import HomeFeed from "@/features/articles/HomeFeed";
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
         </div>
         <aside className="lg:w-80 shrink-0">
           <div className="sticky top-4">
-            <AuthorsList />
+            <AuthorsListContainer />
           </div>
         </aside>
       </div>

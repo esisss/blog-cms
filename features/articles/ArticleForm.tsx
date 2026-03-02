@@ -9,20 +9,34 @@ import { fromAppError, fromTrpcError } from "@/lib/errors";
 import { useTRPC } from "@/lib/trpc/client";
 import type { ActionErrors, CreateArticleInput } from "@/types";
 
-export function ArticleForm() {
+interface ArticleFormProps {
+  mode?: "create" | "edit";
+  article?: {
+    id: string;
+    title: string;
+    text: string;
+    coverImageUrl: string;
+  };
+  onSuccess?: () => void;
+}
+
+export function ArticleForm({ mode = "create", article, onSuccess }: ArticleFormProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const router = useRouter();
   const [actionErrors, setActionErrors] = useState<ActionErrors | null>(null);
+
+  const isEditMode = mode === "edit" && article;
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<CreateArticleInput>({
     defaultValues: {
-      title: "",
-      text: "",
-      coverImageUrl: "",
+      title: article?.title ?? "",
+      text: article?.text ?? "",
+      coverImageUrl: article?.coverImageUrl ?? "",
     },
   });
 
@@ -41,21 +55,53 @@ export function ArticleForm() {
     }),
   );
 
+  const updateArticleMutation = useMutation(
+    trpc.articles.updateArticle.mutationOptions({
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: trpc.articles.getArticles.queryKey(),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: trpc.articles.getArticleById.queryKey({ id: article?.id ?? "" }),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: trpc.articles.getArticlesByAuthor.queryKey(),
+          }),
+        ]);
+      },
+    }),
+  );
+
+  const onSubmit = async (values: CreateArticleInput) => {
+    try {
+      if (isEditMode) {
+        await updateArticleMutation.mutateAsync({
+          id: article.id,
+          ...values,
+        });
+        toast.success("Article updated successfully!");
+      } else {
+        await createArticleMutation.mutateAsync(values);
+        toast.success("Article created successfully!");
+      }
+      
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push(isEditMode ? `/article/${article.id}` : "/");
+      }
+    } catch (error) {
+      const trpcError = fromTrpcError(error);
+      setActionErrors(
+        trpcError ?? fromAppError("An unexpected error occurred"),
+      );
+    }
+  };
+
   return (
     <form
-      onSubmit={handleSubmit(async (values) => {
-        try {
-          await createArticleMutation.mutateAsync(values);
-          toast.success("Article created successfully!");
-          router.push(`/`);
-        } catch (error) {
-          const trpcError = fromTrpcError(error);
-
-          setActionErrors(
-            trpcError ?? fromAppError("An unexpected error occurred"),
-          );
-        }
-      })}
+      onSubmit={handleSubmit(onSubmit)}
       noValidate
       className="w-full space-y-4 "
     >
@@ -155,7 +201,7 @@ export function ArticleForm() {
         {isSubmitting ? (
           <span className="loading loading-spinner"></span>
         ) : null}
-        Publish
+        {isEditMode ? "Update" : "Publish"}
       </button>
     </form>
   );

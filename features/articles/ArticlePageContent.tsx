@@ -1,6 +1,11 @@
 "use client";
 
+import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { DeleteConfirmModal } from "@/components/DeleteConfirmModal";
+import { useDeleteArticle } from "@/hooks/useDeleteArticle";
+import { useSession } from "@/lib/auth-client";
 
 interface Article {
   id: string;
@@ -8,9 +13,15 @@ interface Article {
   text: string;
   coverImageUrl: string | null;
   createdAt: string;
+  authorId: string;
 }
 
 export function ArticlePageContent({ article }: { article: Article }) {
+  const { data: session } = useSession();
+  const isOwner = session?.user?.id === article.authorId;
+  const { showConfirm, setShowConfirm, handleDelete, isDeleting } =
+    useDeleteArticle({ articleId: article.id });
+
   const authorPlaceholder = {
     name: "Autor desconocido",
     avatarUrl:
@@ -32,9 +43,28 @@ export function ArticlePageContent({ article }: { article: Article }) {
       )}
 
       <header className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">
-          {article.title}
-        </h1>
+        <div className="flex justify-between items-start mb-4 md:mb-6">
+          <h1 className="text-2xl md:text-4xl font-bold">{article.title}</h1>
+          {isOwner && (
+            <div className="flex gap-2">
+              <Link
+                href={`/article/${article.id}?edit=true`}
+                className="btn btn-ghost btn-sm gap-2"
+              >
+                <Pencil className="w-4 h-4" />
+                Editar
+              </Link>
+              <button
+                type="button"
+                onClick={() => setShowConfirm(true)}
+                className="btn btn-ghost btn-sm gap-2 text-error hover:bg-error/10"
+              >
+                <Trash2 className="w-4 h-4" />
+                Eliminar
+              </button>
+            </div>
+          )}
+        </div>
 
         <div className="flex items-center gap-4">
           <div className="avatar">
@@ -63,6 +93,13 @@ export function ArticlePageContent({ article }: { article: Article }) {
       <div className="prose prose-base md:prose-lg max-w-none">
         <p className="whitespace-pre-wrap leading-relaxed">{article.text}</p>
       </div>
+
+      <DeleteConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleDelete}
+        isDeleting={isDeleting}
+      />
     </article>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+import { EditArticleModal } from "@/features/articles/EditArticleModal";
+import { useSession } from "@/lib/auth-client";
 import { useTRPC } from "@/lib/trpc/client";
 import {
   ArticlePageContent,
@@ -11,15 +13,17 @@ import {
 
 export default function ArticlePage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const id = params.id ?? "";
+  const isEditMode = searchParams.get("edit") === "true";
+  
   const trpc = useTRPC();
+  const { data: session } = useSession();
 
   const { data, isLoading, error } = useQuery({
     ...trpc.articles.getArticleById.queryOptions({ id }),
     enabled: id.length > 0,
   });
-
-  console.log("Article data:", data);
 
   if (isLoading) {
     return <ArticlePageSkeleton />;
@@ -29,5 +33,22 @@ export default function ArticlePage() {
     return <ArticlePageError />;
   }
 
-  return <ArticlePageContent article={data} />;
+  const isOwner = session?.user?.id === data.authorId;
+  const showEditModal = isEditMode && isOwner;
+
+  return (
+    <>
+      <ArticlePageContent article={data} />
+      {showEditModal && (
+        <EditArticleModal
+          article={{
+            id: data.id,
+            title: data.title,
+            text: data.text,
+            coverImageUrl: data.coverImageUrl,
+          }}
+        />
+      )}
+    </>
+  );
 }

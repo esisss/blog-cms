@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import { PostModalWrapper } from "@/components/PostModalWrapper";
 
@@ -12,7 +13,9 @@ export default function MainLayout({
         <Navbar />
       </div>
       <main className="w-screen ">{children}</main>
-      <PostModalWrapper />
+      <Suspense fallback={null}>
+        <PostModalWrapper />
+      </Suspense>
     </div>
   );
 }

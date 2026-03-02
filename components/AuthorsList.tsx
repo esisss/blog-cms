@@ -1,8 +1,15 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useTRPC } from "@/lib/trpc/client";
+
+interface Author {
+  id: string;
+  name: string;
+  email: string;
+  articleCount: number;
+}
+
+interface AuthorsListProps {
+  authors: Author[];
+}
 
 export function AuthorsListSkeleton() {
   return (
@@ -25,28 +32,8 @@ export function AuthorsListSkeleton() {
   );
 }
 
-export default function AuthorsList() {
-  const trpc = useTRPC();
-  const { data, isLoading, error } = useQuery(
-    trpc.authors.getAuthors.queryOptions(),
-  );
-
-  if (isLoading) {
-    return <AuthorsListSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <h3 className="font-bold text-3xl mb-8">Authors</h3>
-        <div className="card bg-base-100 shadow-md p-4">
-          <p className="text-error text-sm">Failed to load authors</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data || data.length === 0) {
+export default function AuthorsList({ authors }: AuthorsListProps) {
+  if (authors.length === 0) {
     return (
       <div className="space-y-4">
         <h3 className="font-bold text-3xl mb-8">Authors</h3>
@@ -62,7 +49,7 @@ export default function AuthorsList() {
       <h3 className="font-bold text-3xl mb-8">Authors</h3>
       <div className="card bg-base-100 shadow-md p-4">
         <ul className="space-y-3">
-          {data.map((author) => (
+          {authors.map((author) => (
             <li key={author.id}>
               <Link
                 href={`/profile/${author.id}`}
