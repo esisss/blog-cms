@@ -1,6 +1,11 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import type { AuthorProfile } from "@/schemas";
+
+const FALLBACK_IMAGE =
+  "https://media.istockphoto.com/id/1128826884/vector/no-image-vector-symbol-missing-available-icon-no-gallery-for-this-moment.jpg?s=612x612&w=0&k=20&c=390e76zN_TJ7HZHJpnI7jNl7UBpO3UP7hpR2meE1Qd4=";
 
 type SerializedAuthorProfile = Omit<AuthorProfile, "createdAt"> & {
   createdAt: string | Date;
@@ -11,20 +16,30 @@ interface AuthorProfileCardProps {
 }
 
 export default function AuthorProfileCard({ author }: AuthorProfileCardProps) {
+  const [imgError, setImgError] = useState(false);
+
   const memberSince = new Date(author.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    author.name,
+  )}&background=random&size=128`;
+
   return (
     <div className="card bg-base-100 shadow-md">
       <div className="card-body items-center text-center">
-        <div className="avatar placeholder mb-4">
-          <div className="bg-neutral text-neutral-content rounded-full w-24">
-            <span className="text-3xl">
-              {author.name.charAt(0).toUpperCase()}
-            </span>
+        <div className="avatar mb-4">
+          <div className="w-24 rounded-full">
+            <Image
+              src={imgError ? FALLBACK_IMAGE : avatarUrl}
+              alt={author.name}
+              width={96}
+              height={96}
+              onError={() => setImgError(true)}
+            />
           </div>
         </div>
         <h1 className="card-title text-2xl">{author.name}</h1>
